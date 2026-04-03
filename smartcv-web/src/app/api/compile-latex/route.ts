@@ -31,6 +31,16 @@ export async function POST(req: NextRequest) {
     // moderncv 已内置 hyperref，去掉重复加载避免 option clash
     processedLatex = processedLatex.replace(/\\usepackage(\[.*?\])?\{hyperref\}\n?/g, '');
 
+    // 修正常见的 fontawesome5 图标名错误（网页版写法 → LaTeX 包正确写法）
+    processedLatex = processedLatex
+      .replace(/\\faMobileAlt/g, '\\faMobile')
+      .replace(/\\faMapMarkerAlt/g, '\\faMapMarker')
+      .replace(/\\faPhoneAlt/g, '\\faPhone')
+      .replace(/\\faUserAlt/g, '\\faUser')
+      .replace(/\\faFileAlt/g, '\\faFile')
+      .replace(/\\faDollarSign/g, '\\faDollar')
+      .replace(/\\faLocationArrow/g, '\\faMapMarker');
+
     await writeFile(texFile, processedLatex, 'utf8');
 
     await execAsync(
