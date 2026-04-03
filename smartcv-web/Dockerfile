@@ -11,11 +11,11 @@ FROM node:20-slim
 
 # 安装 xelatex + 中文支持
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    poppler-utils \
     texlive-xetex \
     texlive-lang-chinese \
     texlive-fonts-recommended \
     texlive-fonts-extra \
-    poppler-utils \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
