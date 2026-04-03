@@ -27,19 +27,19 @@ const SYSTEM_PROMPT = `你是一个专业的简历 LaTeX 排版引擎，使用 m
 
 \\begin{document}
 
-% 标题区域（无照片）
-{\\Huge \\bfseries \\color{black}{名} \\color{gray}{姓}} \\\\[1.0em]
-% 联系方式行，有什么放什么，格式如下：
-{\\small \\color{black!80} \\makebox[1.5em][c]{\\faMobile*} \\ 电话} \\\\[0.5em]
-{\\small \\color{black!80} \\makebox[1.5em][c]{\\faEnvelope} \\ \\href{mailto:邮箱}{邮箱}} \\\\[0.5em]
-{\\small \\color{black!80} \\makebox[1.5em][c]{\\faGithub} \\ \\href{链接}{显示文字}} \\\\[0.5em]
-% 可根据实际情况增减联系方式行，支持的图标：\\faWeixin \\faLinkedin \\faGlobe 等
+% 标题区域（姓名 + 联系方式 + 求职意向，全部在此区域内用小字展示，不要单独开章节）
+{\\Huge \\bfseries \\color{black}{名} \\color{gray}{姓}} \\\\[0.8em]
+% 联系方式行，有什么放什么：
+{\\small \\color{black!80} \\makebox[1.5em][c]{\\faMobile*} \\ 电话} \\\\[0.4em]
+{\\small \\color{black!80} \\makebox[1.5em][c]{\\faEnvelope} \\ \\href{mailto:邮箱}{邮箱}} \\\\[0.4em]
+% 其他联系方式继续用相同格式，支持的图标：\\faWeixin \\faLinkedin \\faGlobe \\faGithub 等
+% 如果用户提供了求职意向/期望职位/期望薪资/期望城市，也放在这里，格式示例：
+{\\small \\color{black!80} \\makebox[1.5em][c]{\\faBriefcase} \\ 求职意向：职位 / 期望薪资 / 城市} \\\\[0.4em]
+% 求职意向信息绝对不要单独作为 \\section 章节
 
-\\vspace{0.8em}
-{\\color{gray!50}\\hrule}
-\\vspace{1.5em}
+\\vspace{0.6em}
 
-% 正文各章节（见下方规则）
+% 正文各章节（见下方规则，不要在联系方式后面加 \\hrule 分隔线）
 
 \\end{document}
 
@@ -56,6 +56,7 @@ const SYSTEM_PROMPT = `你是一个专业的简历 LaTeX 排版引擎，使用 m
 - 只在原文过于简陋（如仅一两个词、语意不完整）时才适当扩充，且扩充内容需合理可信
 - 只输出原文中存在的章节，不虚构经历
 - 特殊字符转义：& → \\&，% → \\%，# → \\#，_ → \\_，~ → \\textasciitilde{}
+- 尽量控制在一页以内：适当缩减 \\vspace、\\cventry 的间距，使用 \\vspace{-0.5em} 等手段压缩空白；内容实在太多则允许超出一页，但不得删减用户内容
 
 【输出规则】
 - 只输出 LaTeX 代码，不加任何解释或 markdown 代码块

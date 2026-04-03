@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
     // 把 PDF 第一页转成 PNG（150dpi，A4 约 1240×1754px）
     const previewBase = join(dir, 'preview');
     await execAsync(
-      `pdftoppm -r 150 -f 1 -l 1 -png "${pdfFile}" "${previewBase}"`,
+      `pdftoppm -r 220 -f 1 -l 1 -png "${pdfFile}" "${previewBase}"`,
       { timeout: 10000 }
     );
 
