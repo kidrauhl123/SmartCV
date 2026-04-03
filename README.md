@@ -1,6 +1,7 @@
 # SmartCV
 
 把简历内容粘进去，AI 帮你排版成好看的 PDF。
+https://smartcv-production.up.railway.app/
 
 ## 怎么用
 
