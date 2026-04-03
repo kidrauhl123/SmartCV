@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd smartcv-web:*)",
+      "Bash(dir src:*)",
+      "Bash(where xelatex:*)"
+    ]
+  }
+}
