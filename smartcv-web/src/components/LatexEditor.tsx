@@ -9,6 +9,7 @@ export default function LatexEditor({ code, onChange, onCompileResult }: {
 }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
     const handleAutoCompile = () => {
@@ -38,23 +39,40 @@ export default function LatexEditor({ code, onChange, onCompileResult }: {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow p-6">
-      <div className="flex justify-between mb-4">
-        <h2 className="text-lg font-semibold">LaTeX 代码</h2>
+    <div className="bg-white rounded-lg shadow p-4">
+      <div className="flex justify-between items-center">
         <button
-          onClick={handleCompile}
-          disabled={loading}
-          className="bg-green-600 text-white px-4 py-2 rounded-lg disabled:opacity-50"
+          onClick={() => setExpanded(v => !v)}
+          className="text-sm text-gray-400 hover:text-gray-600 flex items-center gap-1"
         >
-          {loading ? '编译中...' : '生成预览'}
+          <span>{expanded ? '▾' : '▸'}</span>
+          <span>LaTeX 代码{code ? '（可手动编辑）' : ''}</span>
         </button>
+        {expanded && (
+          <button
+            onClick={handleCompile}
+            disabled={loading}
+            className="text-sm bg-green-600 text-white px-3 py-1.5 rounded-lg disabled:opacity-50"
+          >
+            {loading ? '编译中...' : '重新编译'}
+          </button>
+        )}
       </div>
-      {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
-      <textarea
-        value={code}
-        onChange={(e) => onChange(e.target.value)}
-        className="w-full h-96 p-3 border rounded-lg font-mono text-sm"
-      />
+
+      {expanded && (
+        <div className="mt-3">
+          {error && <p className="text-red-500 text-sm mb-2 whitespace-pre-wrap">{error}</p>}
+          <textarea
+            value={code}
+            onChange={(e) => onChange(e.target.value)}
+            className="w-full h-96 p-3 border rounded-lg font-mono text-sm"
+          />
+        </div>
+      )}
+
+      {!expanded && error && (
+        <p className="text-red-500 text-sm mt-2 whitespace-pre-wrap">{error}</p>
+      )}
     </div>
   );
 }
