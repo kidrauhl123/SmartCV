@@ -1,10 +1,6 @@
 {
   "scripts": {
-    "postinstall": "npm --prefix smartcv-web install",
     "build": "npm --prefix smartcv-web run build",
     "start": "npm --prefix smartcv-web run start"
-  },
-  "dependencies": {
-    "jspdf-autotable": "^5.0.7"
   }
 }

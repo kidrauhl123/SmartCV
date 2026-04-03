@@ -1,9 +1,9 @@
 FROM node:20-slim AS builder
 
 WORKDIR /app
-COPY package*.json ./
+COPY smartcv-web/package*.json ./
 RUN npm install
-COPY . .
+COPY smartcv-web/ .
 RUN npm run build
 
 # ---- runtime ----
