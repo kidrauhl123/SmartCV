@@ -2,7 +2,11 @@
 
 import { useEffect, useState } from 'react';
 
-export default function LatexEditor({ code, onChange, onCompile }: any) {
+export default function LatexEditor({ code, onChange, onCompileResult }: {
+  code: string;
+  onChange: (code: string) => void;
+  onCompileResult: (result: { pdfUrl: string; previewUrl: string }) => void;
+}) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -25,7 +29,7 @@ export default function LatexEditor({ code, onChange, onCompile }: any) {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || '编译失败');
-      onCompile(data.pdfUrl);
+      onCompileResult({ pdfUrl: data.pdfUrl, previewUrl: data.previewUrl });
     } catch (e: any) {
       setError(e.message);
     } finally {

@@ -3,7 +3,13 @@
     "allow": [
       "Bash(cd smartcv-web:*)",
       "Bash(dir src:*)",
-      "Bash(where xelatex:*)"
+      "Bash(where xelatex:*)",
+      "Bash(npm install:*)",
+      "Bash(where gswin64c:*)",
+      "Bash(where gswin32c:*)",
+      "Bash(where gs:*)",
+      "Bash(where pdftoppm:*)",
+      "Read(//d/texlive/2026/bin/windows/**)"
     ]
   }
 }
