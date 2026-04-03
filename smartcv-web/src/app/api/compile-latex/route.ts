@@ -72,8 +72,14 @@ export async function POST(req: NextRequest) {
     let log = '';
     try {
       const logContent = await readFile(logFile, 'utf8');
-      const errorLines = logContent.split('\n').filter(l => l.startsWith('!') || l.includes('Error'));
-      log = errorLines.slice(0, 20).join('\n');
+      const lines = logContent.split('\n');
+      const errorBlocks: string[] = [];
+      lines.forEach((line, i) => {
+        if (line.startsWith('!')) {
+          errorBlocks.push(...lines.slice(i, i + 4));
+        }
+      });
+      log = errorBlocks.slice(0, 40).join('\n');
     } catch {}
     console.error('编译错误:', error.message, '\n日志:', log);
     return NextResponse.json({ error: `编译失败:\n${log || error.message}` }, { status: 500 });
