@@ -21,10 +21,10 @@ export async function POST(req: NextRequest) {
 
     // 强制注入中文支持
     let processedLatex = latex;
-    if (!latex.includes('\\usepackage[UTF8]{ctex}') && !latex.includes('\\usepackage{xeCJK}')) {
+    if (!latex.includes('\\usepackage[UTF8]{ctex}') && !latex.includes('\\usepackage{ctex}') && !latex.includes('\\usepackage{xeCJK}')) {
       processedLatex = processedLatex.replace(
         /\\begin\{document\}/,
-        '\\usepackage[UTF8]{ctex}\n\\begin{document}'
+        '\\usepackage{ctex}\n\\begin{document}'
       );
     }
 

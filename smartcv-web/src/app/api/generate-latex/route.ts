@@ -42,7 +42,7 @@ const SYSTEM_PROMPT = `你是一名专业的简历设计师，将用户的简历
 \\begin{minipage}[b]{0.72\\textwidth}
 {\\raggedright
   {\\Huge \\bfseries \\color{black}{名} \\color{gray}{姓}} \\\\[0.8em]
-  {\\small \\color{black!80} \\makebox[1.5em][c]{\\faMobile*} \\ 电话} \\\\[0.4em]
+  {\\small \\color{black!80} \\makebox[1.5em][c]{\\faMobileAlt} \\ 电话} \\\\[0.4em]
   {\\small \\color{black!80} \\makebox[1.5em][c]{\\faEnvelope} \\ \\href{mailto:邮箱}{邮箱}} \\\\[0.4em]
   % 其他联系方式（微信、GitHub 等）同格式追加，有什么放什么
   % 如有求职意向，也用同样格式放这里，例如：
@@ -77,6 +77,8 @@ const SYSTEM_PROMPT = `你是一名专业的简历设计师，将用户的简历
 - 忠实用户原文，不翻译、不改写、不虚构
 - 特殊字符转义：& → \\&，% → \\%，# → \\#，_ → \\_
 - 布局紧凑，尽量一页
+- 不要添加 \\usepackage{hyperref}，moderncv 已内置，\\href 可直接使用
+- fontawesome5 图标只用常见的：\\faMobileAlt \\faEnvelope \\faWeixin \\faGithub \\faLinkedin \\faGlobe \\faBriefcase \\faMapMarkerAlt，不要用不确定是否存在的图标名
 - 只输出 LaTeX 代码，直接以 \\documentclass 开头，以 \\end{document} 结尾`;
 
 // 返回哪些 provider 有默认 Key 可用
