@@ -35,12 +35,13 @@ const SYSTEM_PROMPT = `你是一名专业的简历设计师，将用户的简历
 \\usepackage{enumitem}
 \\setlist[itemize]{noitemsep, topsep=0pt, leftmargin=1.5em}
 \\usepackage{fontawesome5}
+\\name{姓名}{}
 
 \\begin{document}
 
 \\begin{minipage}[b]{0.72\\textwidth}
 {\\raggedright
-  {\\Huge \\bfseries \\color{black}{姓名} \\color{gray}{拼音或英文名}} \\\\[0.8em]
+  {\\Huge \\bfseries 姓名} \\\\[0.8em]
   {\\small \\color{black!80} \\makebox[1.5em][c]{\\faMobile} \\ 电话} \\\\[0.4em]
   {\\small \\color{black!80} \\makebox[1.5em][c]{\\faEnvelope} \\ \\href{mailto:邮箱}{邮箱}} \\\\[0.4em]
   % 其他联系方式（微信、GitHub 等）同格式追加，有什么放什么

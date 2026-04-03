@@ -28,6 +28,14 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // moderncv 必须有 \name{}{}，否则 \@firstname 未定义
+    if (!processedLatex.includes('\\name{')) {
+      processedLatex = processedLatex.replace(
+        /\\begin\{document\}/,
+        '\\name{}{}\n\\begin{document}'
+      );
+    }
+
     // moderncv 已内置 hyperref，去掉重复加载避免 option clash
     processedLatex = processedLatex.replace(/\\usepackage(\[.*?\])?\{hyperref\}\n?/g, '');
 
