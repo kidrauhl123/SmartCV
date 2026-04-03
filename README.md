@@ -1,40 +1,35 @@
-# SmartCV - AI 简历生成器
+# SmartCV
 
-基于 Web + AI 的智能简历生成工具，自动将无格式简历转换为精美的 LaTeX 排版简历。
+把简历内容粘进去，AI 帮你排版成好看的 PDF。
 
-## 功能特性
+## 怎么用
 
-- 📝 支持粘贴文本或上传 PDF/Word 文件
-- 🤖 AI 智能解析简历内容
-- 📄 自动生成 LaTeX 代码
-- 👁️ 实时 PDF 预览
-- ✏️ 支持手动编辑 LaTeX 代码
+在左侧选择 AI 提供商并填写 API Key（如果网站已配置默认 Key 则不需要填），把简历内容粘到文本框里点生成。AI 会输出 LaTeX 代码，自动编译成 PDF 并在右侧预览。可以直接下载，也可以先上传照片拖到合适位置再下载。
 
-## 技术栈
+支持的 AI 提供商：Grok (xAI)、DeepSeek、OpenAI，都是 OpenAI 兼容接口格式。
 
-- Next.js 16 + React 19
-- TypeScript
-- Tailwind CSS
-- LaTeX
+## 本地运行
 
-## 快速开始
+需要提前安装 [TeX Live](https://tug.org/texlive/)（用于编译 LaTeX）和 Node.js。
 
-安装依赖：
-\`\`\`bash
+```bash
+cd smartcv-web
 npm install
-\`\`\`
-
-运行开发服务器：
-\`\`\`bash
 npm run dev
-\`\`\`
+```
 
 访问 http://localhost:3000
 
-## 待完成功能
+## 部署
 
-1. 集成 AI API（OpenAI/Claude）用于简历解析
-2. 实现 LaTeX 编译服务（推荐使用 LaTeX.Online API）
-3. 完善文件解析功能（PDF/Word）
-4. 添加多个简历模板
-5. 支持导出功能
+项目包含 Dockerfile，使用 Railway 等支持 Docker 的平台直接部署即可。需要在环境变量里配置 API Key：
+
+- `GROK_API_KEY` — xAI Grok
+- `DEEPSEEK_API_KEY` — DeepSeek
+- `OPENAI_API_KEY` — OpenAI
+
+配置了哪个就开放哪个，用户也可以自己填 Key 覆盖默认的。
+
+## 技术
+
+Next.js + TypeScript，服务端用 xelatex 编译 LaTeX、pdftoppm 生成预览图，客户端用 pdf-lib 在下载前把照片嵌进 PDF。
