@@ -96,7 +96,7 @@ export default function PdfPreview({ pdfUrl, previewUrl }: { pdfUrl: string; pre
     }
 
     const bytes = await pdfDoc.save();
-    const blob = new Blob([bytes], { type: 'application/pdf' });
+    const blob = new Blob([new Uint8Array(bytes.buffer as ArrayBuffer, bytes.byteOffset, bytes.byteLength)], { type: 'application/pdf' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
