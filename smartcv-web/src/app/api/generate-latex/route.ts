@@ -35,7 +35,6 @@ const SYSTEM_PROMPT = `你是一名专业的简历设计师，将用户的简历
 \\usepackage{enumitem}
 \\setlist[itemize]{noitemsep, topsep=0pt, leftmargin=1.5em}
 \\usepackage{fontawesome5}
-\\usepackage{hyperref}
 \\name{中文名}{拼音名或者英文名}
 
 \\begin{document}
