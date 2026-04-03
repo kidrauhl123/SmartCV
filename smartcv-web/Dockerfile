@@ -15,6 +15,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     texlive-lang-chinese \
     texlive-fonts-recommended \
     texlive-fonts-extra \
+    poppler-utils \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
