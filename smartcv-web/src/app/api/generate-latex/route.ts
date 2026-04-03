@@ -7,14 +7,13 @@ const PROVIDERS: Record<string, { baseUrl: string; defaultModel: string }> = {
   },
 };
 
-const SYSTEM_PROMPT = `你是一个专业的简历 LaTeX 排版引擎，使用 moderncv 模板生成简历。
+const SYSTEM_PROMPT = `你是一名专业的简历设计师，将用户的简历内容排版成 LaTeX 简历。基本按照下方模板结构输出，根据用户内容填充，不要虚构内容。
 
-【固定模板结构】
-严格按照以下模板框架输出，不得更改文档类和导言区配置：
+模板结构如下（花括号内为占位说明）：
 
 \\documentclass[11pt,a4paper,sans]{moderncv}
 \\moderncvstyle{banking}
-\\definecolor{mygrey}{RGB}{80, 80, 80}
+\\definecolor{mygrey}{RGB}{80,80,80}
 \\moderncvcolor{black}
 \\renewcommand{\\labelitemi}{\\textcolor{mygrey}{\\small$\\bullet$}}
 \\nopagenumbers
@@ -23,45 +22,49 @@ const SYSTEM_PROMPT = `你是一个专业的简历 LaTeX 排版引擎，使用 m
 \\setlist[itemize]{noitemsep, topsep=0pt, leftmargin=1.5em}
 \\usepackage{fontawesome5}
 \\usepackage{hyperref}
-\\name{名}{姓}（根据实际姓名填写）
+\\name{中文名}{拼音名或者英文名}
 
 \\begin{document}
 
-% 标题区域（姓名 + 联系方式 + 求职意向，全部在此区域内用小字展示，不要单独开章节）
-{\\Huge \\bfseries \\color{black}{名} \\color{gray}{姓}} \\\\[0.8em]
-% 联系方式行，有什么放什么：
-{\\small \\color{black!80} \\makebox[1.5em][c]{\\faMobile*} \\ 电话} \\\\[0.4em]
-{\\small \\color{black!80} \\makebox[1.5em][c]{\\faEnvelope} \\ \\href{mailto:邮箱}{邮箱}} \\\\[0.4em]
-% 其他联系方式继续用相同格式，支持的图标：\\faWeixin \\faLinkedin \\faGlobe \\faGithub 等
-% 如果用户提供了求职意向/期望职位/期望薪资/期望城市，也放在这里，格式示例：
-{\\small \\color{black!80} \\makebox[1.5em][c]{\\faBriefcase} \\ 求职意向：职位 / 期望薪资 / 城市} \\\\[0.4em]
-% 求职意向信息绝对不要单独作为 \\section 章节
+\\begin{minipage}[b]{0.72\\textwidth}
+{\\raggedright
+  {\\Huge \\bfseries \\color{black}{名} \\color{gray}{姓}} \\\\[0.8em]
+  {\\small \\color{black!80} \\makebox[1.5em][c]{\\faMobile*} \\ 电话} \\\\[0.4em]
+  {\\small \\color{black!80} \\makebox[1.5em][c]{\\faEnvelope} \\ \\href{mailto:邮箱}{邮箱}} \\\\[0.4em]
+  % 其他联系方式（微信、GitHub 等）同格式追加，有什么放什么
+  % 如有求职意向，也用同样格式放这里，例如：
+  % {\\small \\color{black!80} \\makebox[1.5em][c]{\\faBriefcase} \\ 求职意向：} \\\\[0.4em]
+}
+\\end{minipage}
 
 \\vspace{0.6em}
 
-% 正文各章节（见下方规则，不要在联系方式后面加 \\hrule 分隔线）
+% 正文章节，章节名根据内容灵活命名（教育背景、工作经历、项目经历、技能等）
+\\section{章节名}
+
+% 经历类（教育/工作/项目）用 cventry： 而且{}里面的内容你可以灵活调整、留空
+\\cventry{时间}{职位或学位}{机构}{地点}{}{
+  \\begin{itemize}
+    \\item 这里是要点描述
+  \\end{itemize}
+}
+
+% 技能等列举类用两栏 minipage + cvitem：
+\\begin{minipage}[t]{0.48\\textwidth}
+  \\cvitem{类别}{内容}
+\\end{minipage}
+\\hfill
+\\begin{minipage}[t]{0.48\\textwidth}
+  \\cvitem{类别}{内容}
+\\end{minipage}
 
 \\end{document}
 
-【章节规则】
-- 章节名称智能调整：根据用户内容决定章节标题（如用户是学生可用 Education/Internship Experience，工作党可用 Professional Experience，有科研可加 Research 等，注意用中文哈）
-- 每个章节用 \\section{章节名}
-- 教育/工作/项目经历统一用 \\cventry{时间}{职位/学位}{机构}{地点}{}{描述}
-  - 描述用 \\begin{itemize}...\\end{itemize} 列举要点
-- 技能类用两栏 minipage + \\cvitem{类别}{内容} 展示
-- 奖项/证书/出版物等特殊内容视情况用 \\cvitem 或 \\cventry
-
-【内容处理原则】
-- 忠实原文：用户写什么放什么，保留原始语言（中文/英文/混合），不翻译、不改写
-- 只在原文过于简陋（如仅一两个词、语意不完整）时才适当扩充，且扩充内容需合理可信
-- 只输出原文中存在的章节，不虚构经历
-- 特殊字符转义：& → \\&，% → \\%，# → \\#，_ → \\_，~ → \\textasciitilde{}
-- 尽量控制在一页以内：适当缩减 \\vspace、\\cventry 的间距，使用 \\vspace{-0.5em} 等手段压缩空白；内容实在太多则允许超出一页，但不得删减用户内容
-
-【输出规则】
-- 只输出 LaTeX 代码，不加任何解释或 markdown 代码块
-- 输出的简历必须保证和用户输入的语言一致，一般只是中文
-- 直接以 \\documentclass 开头，以 \\end{document} 结尾`;
+【注意】
+- 忠实用户原文，不翻译、不改写、不虚构
+- 特殊字符转义：& → \\&，% → \\%，# → \\#，_ → \\_
+- 布局紧凑，尽量一页
+- 只输出 LaTeX 代码，直接以 \\documentclass 开头，以 \\end{document} 结尾`;
 
 export async function POST(req: NextRequest) {
   const { content, provider = 'grok', apiKey } = await req.json();
