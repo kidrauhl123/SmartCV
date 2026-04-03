@@ -28,6 +28,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // moderncv 已内置 hyperref，去掉重复加载避免 option clash
+    processedLatex = processedLatex.replace(/\\usepackage(\[.*?\])?\{hyperref\}\n?/g, '');
+
     await writeFile(texFile, processedLatex, 'utf8');
 
     await execAsync(
