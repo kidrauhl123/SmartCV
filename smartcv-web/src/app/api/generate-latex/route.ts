@@ -1,9 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const PROVIDERS: Record<string, { baseUrl: string; defaultModel: string }> = {
+const PROVIDERS: Record<string, { baseUrl: string; defaultModel: string; envKey: string; label: string }> = {
   grok: {
     baseUrl: 'https://api.x.ai/v1',
     defaultModel: 'grok-3',
+    envKey: 'GROK_API_KEY',
+    label: 'Grok (xAI)',
+  },
+  deepseek: {
+    baseUrl: 'https://api.deepseek.com',
+    defaultModel: 'deepseek-chat',
+    envKey: 'DEEPSEEK_API_KEY',
+    label: 'DeepSeek',
+  },
+  openai: {
+    baseUrl: 'https://api.openai.com/v1',
+    defaultModel: 'gpt-4o',
+    envKey: 'OPENAI_API_KEY',
+    label: 'OpenAI',
   },
 };
 
@@ -66,16 +80,27 @@ const SYSTEM_PROMPT = `你是一名专业的简历设计师，将用户的简历
 - 布局紧凑，尽量一页
 - 只输出 LaTeX 代码，直接以 \\documentclass 开头，以 \\end{document} 结尾`;
 
+// 返回哪些 provider 有默认 Key 可用
+export async function GET() {
+  const available: string[] = [];
+  for (const [key, config] of Object.entries(PROVIDERS)) {
+    if (process.env[config.envKey]) available.push(key);
+  }
+  return NextResponse.json({ providers: Object.entries(PROVIDERS).map(([value, c]) => ({ value, label: c.label, hasDefault: !!process.env[c.envKey] })) });
+}
+
 export async function POST(req: NextRequest) {
   const { content, provider = 'grok', apiKey } = await req.json();
-
-  if (!apiKey) {
-    return NextResponse.json({ error: '请填写 API Key' }, { status: 400 });
-  }
 
   const providerConfig = PROVIDERS[provider];
   if (!providerConfig) {
     return NextResponse.json({ error: `不支持的 AI 提供商: ${provider}` }, { status: 400 });
+  }
+
+  // 用户没填 Key 时，尝试使用服务器端默认 Key
+  const resolvedKey = apiKey?.trim() || process.env[providerConfig.envKey] || '';
+  if (!resolvedKey) {
+    return NextResponse.json({ error: '请填写 API Key，或联系管理员配置默认 Key' }, { status: 400 });
   }
 
   try {
@@ -83,7 +108,7 @@ export async function POST(req: NextRequest) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${apiKey}`,
+        Authorization: `Bearer ${resolvedKey}`,
       },
       body: JSON.stringify({
         model: providerConfig.defaultModel,
